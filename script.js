@@ -38,6 +38,9 @@ document.addEventListener('DOMContentLoaded', function() {
             })
         })
         .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             // 检查响应是否为流式数据
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
@@ -52,7 +55,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 return reader.read().then(({ done, value }) => {
                     if (done) {
                         // 流结束，将完整消息添加到对话历史
-                        conversationHistory.push({role: "assistant", content: aiMessage});
+                        if (aiMessage) {
+                            conversationHistory.push({role: "assistant", content: aiMessage});
+                        }
                         return;
                     }
                     
@@ -62,27 +67,34 @@ document.addEventListener('DOMContentLoaded', function() {
                     // 处理接收到的数据块
                     try {
                         // 分割数据块，处理可能的多个事件
-                        const lines = chunk.split('\n\n');
+                        const lines = chunk.split('\n');
                         for (const line of lines) {
-                            if (line.startsWith('data: ') && line !== 'data: [DONE]') {
-                                const jsonData = JSON.parse(line.substring(6));
-                                if (jsonData.choices && jsonData.choices[0].delta.content) {
-                                    const content = jsonData.choices[0].delta.content;
-                                    aiMessage += content;
-                                    
-                                    // 如果是第一个数据块，创建新的消息元素
-                                    if (!aiMessageElement) {
-                                        aiMessageElement = addMessageToChat('ai', content, true);
-                                    } else {
-                                        // 否则，追加到现有消息
-                                        const contentElement = aiMessageElement.querySelector('p');
-                                        contentElement.textContent += content;
+                            if (line.startsWith('data: ')) {
+                                const data = line.slice(6);
+                                if (data === '[DONE]') continue;
+                                
+                                try {
+                                    const jsonData = JSON.parse(data);
+                                    if (jsonData.choices && jsonData.choices[0].delta && jsonData.choices[0].delta.content) {
+                                        const content = jsonData.choices[0].delta.content;
+                                        aiMessage += content;
+                                        
+                                        // 如果是第一个数据块，创建新的消息元素
+                                        if (!aiMessageElement) {
+                                            aiMessageElement = addMessageToChat('ai', content, true);
+                                        } else {
+                                            // 否则，追加到现有消息
+                                            const contentElement = aiMessageElement.querySelector('p');
+                                            contentElement.textContent += content;
+                                        }
                                     }
+                                } catch (parseError) {
+                                    console.error('解析JSON数据时出错:', parseError);
                                 }
                             }
                         }
                     } catch (e) {
-                        console.error('解析流数据时出错:', e);
+                        console.error('处理流数据时出错:', e);
                     }
                     
                     // 继续读取流

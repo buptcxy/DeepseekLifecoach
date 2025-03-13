@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const axios = require('axios');
+// 导入dotenv并配置
+require('dotenv').config();
 
 // 创建Express应用
 const app = express();
@@ -53,7 +55,18 @@ app.post('/api/chat', async (req, res) => {
 
         // 将DeepSeek API的响应流式传输到客户端
         response.data.on('data', (chunk) => {
-            res.write(chunk);
+            const text = chunk.toString();
+            try {
+                const lines = text.split('\n');
+                for (const line of lines) {
+                    if (line.trim().startsWith('data:')) {
+                        // 直接转发DeepSeek API的SSE数据
+                        res.write(`${line.trim()}\n\n`);
+                    }
+                }
+            } catch (error) {
+                console.error('处理响应数据时出错:', error);
+            }
         });
 
         response.data.on('end', () => {
