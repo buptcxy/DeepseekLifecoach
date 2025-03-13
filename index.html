@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生活教练AI - 你的个人成长伙伴</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- 添加网站图标 -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- 页眉区域 -->
+    <header>
+        <div class="container">
+            <h1>生活教练AI</h1>
+            <p>你的个人成长伙伴，随时为你提供生活建议和指导</p>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main>
+        <div class="container">
+            <!-- 聊天区域 -->
+            <div class="chat-container">
+                <!-- 聊天历史显示区 -->
+                <div class="chat-history" id="chatHistory">
+                    <!-- 欢迎消息 -->
+                    <div class="message ai-message">
+                        <div class="message-content">
+                            <p>你好！我是你的生活教练AI。我可以帮助你解决生活中的困惑，提供个人成长建议，或者只是倾听你的想法。请告诉我你今天想聊些什么？</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 消息输入区 -->
+                <div class="input-area">
+                    <textarea id="userInput" placeholder="输入你的问题或想法..." rows="2"></textarea>
+                    <button id="sendButton">发送</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚区域 -->
+    <footer>
+        <div class="container">
+            <p>© 2023 生活教练AI - 基于DeepSeek R1 API构建</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript文件 -->
+    <script src="script.js"></script>
+</body>
+</html>
