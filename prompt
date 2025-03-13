@@ -26,3 +26,6 @@ curl https://api.deepseek.com/chat/completions \
 第二次提交：
 不要使用硬编码的方式在代码中保存任何密匙，使用能适配Vercel环境变量的方式保存这些ID和密匙
 全面检查代码中是否还存在硬编码的ID和密匙，输出Vercel中应该填写的环境变量和名称，一步一步的指导我完成设置。
+
+
+
