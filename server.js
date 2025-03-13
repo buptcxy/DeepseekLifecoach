@@ -14,12 +14,17 @@ app.use(express.json()); // 解析JSON请求体
 app.use(express.static(path.join(__dirname))); // 提供静态文件
 
 // DeepSeek API配置
-const DEEPSEEK_API_KEY = 'sk-a51f011d215341eebd3d756d860375fe';
-const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
+const DEEPSEEK_API_URL = process.env.DEEPSEEK_API_URL || 'https://api.deepseek.com/chat/completions';
 
 // 处理聊天API请求
 app.post('/api/chat', async (req, res) => {
     try {
+        // 检查API密钥是否配置
+        if (!DEEPSEEK_API_KEY) {
+            return res.status(500).json({ error: 'API密钥未配置，请设置DEEPSEEK_API_KEY环境变量' });
+        }
+        
         // 设置响应头，支持流式输出
         res.setHeader('Content-Type', 'text/event-stream');
         res.setHeader('Cache-Control', 'no-cache');
@@ -37,13 +42,13 @@ app.post('/api/chat', async (req, res) => {
                 'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
             },
             data: {
-                model: 'deepseek-chat',
+                model: process.env.DEEPSEEK_MODEL || 'deepseek-chat',
                 messages: messages,
                 stream: true,
-                temperature: 0.6
+                temperature: parseFloat(process.env.TEMPERATURE || '0.6')
             },
             responseType: 'stream',
-            timeout: 60000 // 60秒超时设置
+            timeout: parseInt(process.env.API_TIMEOUT || '60000') // 默认60秒超时设置
         });
 
         // 将DeepSeek API的响应流式传输到客户端

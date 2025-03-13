@@ -1,0 +1,26 @@
+我想做一个网站，通过火山方舟的DeepSeek R1 API实现和AI的对话，它会成为我的life coach，通过和我的对话，给我建议，帮助我成长。
+
+DeepSeek R1 API相关信息如下：
+1. api key:sk-a51f011d215341eebd3d756d860375fe
+2. 参考调用指南
+curl https://api.deepseek.com/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <DeepSeek API Key>" \
+  -d '{
+        "model": "deepseek-chat",
+        "messages": [
+          {"role": "system", "content": "You are a helpful assistant."},
+          {"role": "user", "content": "Hello!"}
+        ],
+        "stream": false
+      }'
+注意：API请求超时设置为60秒
+打开流式输出，温度设置为0.6
+
+整个项目请遵循 
+注意，可以创建一个简单的Node.js后端服务器文件，用于处理API请求并解决CORS问题。
+
+
+第二次提交：
+不要使用硬编码的方式在代码中保存任何密匙，使用能适配Vercel环境变量的方式保存这些ID和密匙
+全面检查代码中是否还存在硬编码的ID和密匙，输出Vercel中应该填写的环境变量和名称，一步一步的指导我完成设置。

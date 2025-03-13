@@ -21,7 +21,40 @@
 - 使用Node.js创建简单的后端服务器
 - 处理与DeepSeek R1 API的通信
 - 解决跨域(CORS)问题
-- 保护API密钥安全
+- 使用环境变量保护API密钥安全
+
+## 环境变量配置
+
+本项目使用环境变量来存储敏感信息，如API密钥。这样可以避免将敏感信息硬编码到代码中，提高安全性。
+
+### 本地开发配置
+1. 复制项目根目录中的`.env.example`文件，并重命名为`.env`
+2. 在`.env`文件中填入你的DeepSeek API密钥和其他配置
+
+```
+# DeepSeek API配置
+DEEPSEEK_API_KEY=your_api_key_here
+DEEPSEEK_API_URL=https://api.deepseek.com/chat/completions
+DEEPSEEK_MODEL=deepseek-chat
+
+# 应用配置
+PORT=3000
+TEMPERATURE=0.6
+API_TIMEOUT=60000
+```
+
+### Vercel部署配置
+在Vercel上部署时，需要在Vercel项目设置中配置环境变量：
+
+1. 登录Vercel账户并进入你的项目
+2. 点击「Settings」→「Environment Variables」
+3. 添加以下环境变量：
+   - `DEEPSEEK_API_KEY`：你的DeepSeek API密钥
+   - `DEEPSEEK_API_URL`：API端点URL（默认为https://api.deepseek.com/chat/completions）
+   - `DEEPSEEK_MODEL`：使用的模型名称（默认为deepseek-chat）
+   - `TEMPERATURE`：生成文本的随机性（默认为0.6）
+   - `API_TIMEOUT`：API请求超时时间（默认为60000毫秒）
+4. 点击「Save」保存设置
 
 ## 页面结构
 
@@ -33,7 +66,7 @@
 - **页脚区域**：包含版权信息和必要链接
 
 ## 样式说明
-- 使用柔和的配色方案，创造平静、专注的氛围
+- 使用柔和的配色方案，创造平静、专注氛围
 - 聊天气泡采用不同的颜色区分用户和AI的消息
 - 响应式设计确保在移动设备上的良好体验
 - 简洁的界面设计，减少视觉干扰
